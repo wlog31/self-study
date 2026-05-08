@@ -321,6 +321,7 @@ def _auto_early_leave(app):
                 old_status = att.status   # 'present' 또는 'late' — 동적 캡처
                 att.status = 'early_leave'
                 att.checked_out_at = datetime.combine(today, datetime.strptime('23:59', '%H:%M').time())
+                att.study_minutes = 0  # 퇴실 미확인 — 학습시간 0으로 명시
                 att.early_leave_note = (att.early_leave_note or '') or '퇴실미확인(자동)'
                 db.session.add(AttendanceLog(
                     attendance_id=att.id,

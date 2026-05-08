@@ -820,7 +820,7 @@ def statistics():
 
         # 교시별 학습 시간 벌크 쿼리 (QR 입실·퇴실 기록이 있는 출석만)
         for r in db.session.query(
-            Attendance.user_id, Attendance.period,
+            Attendance.user_id, Attendance.period, Attendance.status,
             Attendance.study_minutes, Attendance.checked_at, Attendance.checked_out_at
         ).filter(
             Attendance.user_id.in_(student_ids),
@@ -830,8 +830,12 @@ def statistics():
             Attendance.checked_out_at.isnot(None),
         ).all():
             if r.checked_out_at > r.checked_at:
-                mins = r.study_minutes if r.study_minutes is not None \
-                       else int((r.checked_out_at - r.checked_at).total_seconds() // 60)
+                if r.study_minutes is not None:
+                    mins = r.study_minutes
+                elif r.status == 'early_leave':
+                    mins = 0  # 퇴실 미확인 자동 조퇴 — 학습시간 없음
+                else:
+                    mins = int((r.checked_out_at - r.checked_at).total_seconds() // 60)
                 key = (r.user_id, r.period)
                 min_by_sp[key] = min_by_sp.get(key, 0) + mins
 
@@ -1864,7 +1868,8 @@ def export_statistics():
         ).all()
         total_minutes = sum(
             a.study_minutes if a.study_minutes is not None
-            else int((a.checked_out_at - a.checked_at).total_seconds() // 60)
+            else (0 if a.status == 'early_leave'
+                  else int((a.checked_out_at - a.checked_at).total_seconds() // 60))
             for a in att_records
             if a.checked_out_at > a.checked_at
         )
