@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Self Study Log</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Self Study Log (GitHub Pages + Google Sheets)</h1>
+
+    <section class="card">
+      <h2>Connection</h2>
+      <label for="apiUrl">Apps Script Web App URL</label>
+      <input id="apiUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec">
+
+      <label for="writeToken">Write Token (optional but recommended)</label>
+      <input id="writeToken" type="password" placeholder="Set the same token in Apps Script property WRITE_TOKEN">
+
+      <div class="row">
+        <button id="saveConfigBtn" type="button">Save Config</button>
+        <button id="healthBtn" type="button">Health Check</button>
+      </div>
+      <p id="status" class="status"></p>
+    </section>
+
+    <section class="card">
+      <h2>Add Daily Log</h2>
+      <form id="logForm">
+        <div class="grid two">
+          <div>
+            <label for="recordDate">Date</label>
+            <input id="recordDate" name="recordDate" type="date" required>
+          </div>
+          <div>
+            <label for="duration">Duration (minutes)</label>
+            <input id="duration" name="duration" type="number" min="1" max="1440" required>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div>
+            <label for="studentId">Student ID</label>
+            <input id="studentId" name="studentId" type="text" maxlength="32">
+          </div>
+          <div>
+            <label for="studentName">Student Name</label>
+            <input id="studentName" name="studentName" type="text" maxlength="64">
+          </div>
+        </div>
+
+        <label for="subject">Subject</label>
+        <input id="subject" name="subject" type="text" maxlength="100" required>
+
+        <label for="memo">Memo</label>
+        <textarea id="memo" name="memo" rows="4" maxlength="1000"></textarea>
+
+        <div class="row">
+          <button type="submit">Save Log</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Read Logs</h2>
+      <div class="grid three">
+        <div>
+          <label for="fromDate">From</label>
+          <input id="fromDate" type="date" required>
+        </div>
+        <div>
+          <label for="toDate">To</label>
+          <input id="toDate" type="date" required>
+        </div>
+        <div>
+          <label for="filterStudentId">Student ID Filter</label>
+          <input id="filterStudentId" type="text" maxlength="32">
+        </div>
+      </div>
+      <div class="row">
+        <button id="loadBtn" type="button">Load Logs</button>
+      </div>
+      <div class="table-wrap">
+        <table id="logTable">
+          <thead>
+            <tr>
+              <th>Created At</th>
+              <th>Date</th>
+              <th>Actor</th>
+              <th>Student</th>
+              <th>Subject</th>
+              <th>Duration</th>
+              <th>Memo</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
